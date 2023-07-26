@@ -80,15 +80,27 @@ public class Main<State, Action> {
 
     }
 
-    public void updateQValues(State state, Action action, double reward) {
+    public void updateQValues(State oldState, Action actionTaken, State newState, double reward) {
 
-        HashMap<Action, Double> actionQValues = this.qTable.get(state);
+        HashMap<Action, Double> actionQValues = this.qTable.get(oldState);
 
         if (actionQValues == null) {
 
-            this.qTable.put(state, new HashMap<Action, Double>());
+            this.qTable.put(oldState, new HashMap<Action, Double>());
+
+            actionQValues = this.qTable.get(oldState);
 
         }
+
+        Double actionQValue = actionQValues.get(actionTaken);
+
+        if (actionQValue == null) {
+
+            actionQValue = 0.0;
+
+        }
+
+        this.qTable.get(oldState).replace(actionTaken, this.calculateQValues(actionQValue, reward, oldState, actionTaken, newState))
 
     }
 
